@@ -1,0 +1,182 @@
+{
+ "title": "Sample AMS schedule",
+ "eyebrow": "Sample with invented sessions · Not the real AMS program",
+ "session_url": "https://ams.confex.com/ams/107ANNUAL/meetingapp.cgi",
+ "footer": "Every session, speaker, organization and room on this sample page is invented. It only shows the format and theme.",
+ "days": [
+  {
+   "key": "tue",
+   "tab": "Tue",
+   "date": "Jan 12",
+   "iso": "2027-01-12",
+   "icon": "storm",
+   "full": "Tuesday, January 12, 2027",
+   "outlook": "Today's outlook: sample models at sunrise, with invented storms firing after lunch.",
+   "blocks": [
+    {
+     "id": "am",
+     "icon": "sun",
+     "time": "8:30",
+     "end": "10:00",
+     "short": "Sample AI models",
+     "label": "Clear skies",
+     "pick": {
+      "id": 1,
+      "title": "Sample Session: Learning to Forecast the Weather",
+      "room": "Alpine 1",
+      "why": "An invented session showing how a top pick and its reason look.",
+      "talks": [
+       {
+        "time": "8:30",
+        "title": "A Friendly Neural Network for Fair-Weather Cumulus",
+        "by": "Nimbus, Cloudburst University",
+        "blurb": "Trains an invented model to predict puffy clouds, with no real findings to report.",
+        "badge": "Storm alert",
+        "abstract": "This invented abstract shows what opens when you choose Full abstract. On a real page, this space holds the complete text from the AMS program. Our imaginary network watched imaginary cumulus clouds for one imaginary summer and concluded that they were, on the whole, very puffy."
+       },
+       {
+        "time": "8:45",
+        "title": "Teaching a Diffusion Model About Drizzle",
+        "by": "Stratus, Example Institute",
+        "blurb": "An imaginary study of very light rain, included to show how a blurb reads.",
+        "abstract": "Another invented abstract, about drizzle that never quite reaches the ground."
+       },
+       {
+        "time": "9:00",
+        "title": "Is It Raining Yet? A Nowcasting Field Guide",
+        "by": "Cirrus, Sample Weather Lab",
+        "blurb": "A made-up comparison of looking outside with looking at radar."
+       }
+      ]
+     },
+     "alts": [
+      {
+       "id": 2,
+       "title": "Sample Session: Another Good Option",
+       "room": "Alpine 2",
+       "why": "Choose this one if you would rather hear about something else at the same time.",
+       "talks": [
+        {
+         "time": "8:30",
+         "title": "An Alternate Talk About Sea Breezes",
+         "by": "Gale, Example Institute",
+         "blurb": "Shows how an alternate unfolds when opened."
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "mid",
+     "icon": "storm",
+     "time": "1:45",
+     "end": "3:00",
+     "short": "Sample severe storms",
+     "label": "Storms firing",
+     "pick": {
+      "id": 3,
+      "title": "Sample Session: Thunderstorms and Their Feelings",
+      "room": "Alpine 3",
+      "why": "The sample schedule's big afternoon pick.",
+      "talks": [
+       {
+        "time": "1:45",
+        "title": "Why Supercells Rotate, Explained With Teacups",
+        "by": "Cumulo, Cloudburst University",
+        "blurb": "An invented demonstration using kitchen equipment.",
+        "badge": "Storm alert"
+       },
+       {
+        "time": "2:00",
+        "title": "Hail You Could Catch in a Mitten",
+        "by": "Graupel, Sample Weather Lab",
+        "blurb": "A fictional survey of small, polite hailstones."
+       }
+      ]
+     },
+     "alts": []
+    },
+    {
+     "id": "post",
+     "icon": "poster",
+     "time": "3:00",
+     "end": "4:30",
+     "short": "Sample posters",
+     "label": "Scattered drops",
+     "posters": {
+      "title": "Posters and coffee",
+      "room": "Cloud Hall",
+      "note": "Relevant posters appear here, grouped by topic.",
+      "groups": [
+       {
+        "name": "Storms",
+        "items": [
+         {
+          "title": "A Census of Sample Clouds",
+          "by": "Virga, Example Institute",
+          "blurb": "Counts imaginary clouds over an imaginary city."
+         },
+         {
+          "title": "Lightning, But Make It Tiny",
+          "by": "Bolt, Sample Weather Lab",
+          "blurb": "An invented look at very small flashes."
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "id": "eve",
+     "icon": "moon",
+     "time": "6:00",
+     "end": "late",
+     "short": "Sample reception",
+     "label": "Clearing",
+     "evening": "Sample evening",
+     "list": [
+      {
+       "time": "6:00",
+       "title": "Sample Reception",
+       "note": "Cloud Hall, until 7:30."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "wed",
+   "tab": "Wed",
+   "date": "Jan 13",
+   "iso": "2027-01-13",
+   "icon": "rain",
+   "full": "Wednesday, January 13, 2027",
+   "outlook": "Today's outlook: light operational showers, clearing by the time this sample ends.",
+   "blocks": [
+    {
+     "id": "am",
+     "icon": "rain",
+     "time": "8:30",
+     "end": "10:00",
+     "short": "Sample operations",
+     "label": "Passing showers",
+     "pick": {
+      "id": 4,
+      "title": "Sample Session: Forecasts in Production",
+      "room": "Alpine 1",
+      "why": "A second sample day, so the day tabs have somewhere to go.",
+      "talks": [
+       {
+        "time": "8:30",
+        "title": "Keeping a Pretend Model Running",
+        "by": "Squall, Example Institute",
+        "blurb": "An invented account of an imaginary on-call rotation."
+       }
+      ]
+     },
+     "alts": []
+    }
+   ]
+  }
+ ]
+}

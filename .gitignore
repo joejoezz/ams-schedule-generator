@@ -1,0 +1,8 @@
+# Generated, personal or AMS-owned content stays on your machine.
+program/
+digests/
+interests.json
+schedule.json
+my-ams-schedule.html
+__pycache__/
+.DS_Store

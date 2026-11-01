@@ -1,0 +1,14 @@
+{
+  "name": "Your Name",
+  "groups": {
+    "Top interest": {"weight": 2, "keywords": ["machine learning", "AI", "severe", "tornad*"]},
+    "Secondary interest": {"weight": 1, "keywords": ["radar", "nowcast*"]},
+    "Topics to play down": {"weight": -1, "keywords": ["example topic"]}
+  },
+  "badges": {"Must see": ["example keyword*"]},
+  "must_see": "Presidential Forum|Keynote|Lecture",
+  "evening": "Exhibit Hall Opening|Mixer|University Night|Night Live|Awards|Banquet",
+  "min_score": 2,
+  "alternates_per_slot": 3,
+  "posters_per_session": 15
+}
