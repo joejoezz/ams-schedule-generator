@@ -84,7 +84,7 @@ If you can, open `my-ams-schedule.html` in a browser and look at it, including a
 
 ## 6. Hand it over
 
-Tell the person where the page is, the two or three hardest choices, anything you couldn't verify, and that rooms and talks can change, so they should check the official program. Offer to adjust the schedule after they've read it. The page is one self-contained file they can email to themselves.
+Tell the person where the page is, the two or three hardest choices, anything you couldn't verify, and that rooms and talks can change, so they should check the official program. Offer to adjust the schedule after they've read it. The page is one self-contained file they can email to themselves. Under each talk and poster it has notes with screenshots, saved in that browser on that device, with a backup button at the bottom. Tell them that, and that clearing browser data erases notes that haven't been backed up. Notes are stored by paper id, so they survive rebuilding the page, as long as the file stays at the same location and paper ids are kept.
 
 Keep the theme unless they ask to change it. It lives in `template.html`: color variables at the top of `<style>` (with separate dark-mode values) and weather icons in `ICON`. Colors approximate the AMS palette.
 

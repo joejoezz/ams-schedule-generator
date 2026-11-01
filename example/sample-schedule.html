@@ -3,6 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Sample AMS schedule</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800&display=swap">
 <style>
 /* Layout: each day reads as a sky, one forecast block per time slot; the day tabs stay pinned at the top. */
@@ -87,6 +88,22 @@ details.abs{background:none;border-radius:0;padding:0;flex:0 1 auto}
 details.abs[open]{flex-basis:100%}
 details.abs summary{color:var(--blue);font-weight:700}
 .talks details.abs p,.poster details.abs p{margin:6px 0 4px;color:var(--ink);font-weight:400;font-size:.9rem}
+details.note summary.has{color:var(--navy)}
+.notepanel{margin-top:6px;font-weight:400;border-radius:12px}
+.notepanel.drag{outline:3px dashed var(--blue);outline-offset:3px}
+.notepanel textarea{display:block;width:100%;min-height:96px;padding:8px 10px;border:2px solid var(--line);border-radius:12px;background:var(--sky2);color:var(--ink);font:inherit;font-size:.93rem;resize:vertical}
+.notepanel textarea:focus-visible,.noteadd:focus-within,.noteremove:focus-visible,#notesbackup:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.notetools{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:6px}
+.noteadd,.noteremove,#notesbackup{display:inline-block;min-height:32px;padding:4px 12px;border:2px solid var(--blue);border-radius:99px;background:none;color:var(--blue);font:inherit;font-size:.82rem;font-weight:800;cursor:pointer}
+.noteadd input{position:absolute;width:1px;height:1px;opacity:0}
+.notestatus{color:var(--muted);font-size:.82rem;margin:0}
+.notestatus.bad{color:var(--ink);font-weight:800}
+.notegallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:8px}
+.notegallery:empty{display:none}
+.notegallery figure{margin:0;min-width:0}
+.notegallery img{display:block;width:100%;height:96px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.noteremove{margin-top:4px;min-height:28px;padding:2px 10px;font-size:.76rem}
+#notesbar{margin-bottom:12px;color:var(--ink)}
 footer{border-top:2px solid var(--line);padding-block:16px 32px;color:var(--muted);font-size:.86rem}
 .drop{animation:fall 1.6s linear infinite}
 @keyframes fall{0%{transform:translateY(-2px);opacity:0}30%{opacity:1}100%{transform:translateY(6px);opacity:0}}
@@ -116,7 +133,7 @@ footer{border-top:2px solid var(--line);padding-block:16px 32px;color:var(--mute
 <div class="wrap">
   <nav class="outlook" id="outlook" aria-label="Day at a glance"></nav>
   <main id="day"></main>
-  <footer id="foot"></footer>
+  <footer><div id="notesbar" hidden></div><div id="foot"></div></footer>
 </div>
 <script>
 const ICON={
@@ -133,7 +150,7 @@ const DAYS=DATA.days;
 const S=id=>DATA.session_url.replace("{id}",id);
 const e=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const PAPER=id=>DATA.session_url.replace("Session/{id}",`Paper/${id}`);
-const more=x=>{const link=x.paper?`<a href="${PAPER(x.paper)}" target="_blank" rel="noopener">AMS page</a>`:"";const abs=x.abstract?`<details class="abs"><summary>Full abstract</summary><p>${e(x.abstract)}</p></details>`:"";return link||abs?`<div class="more">${link}${abs}</div>`:""};
+const more=x=>{const link=x.paper?`<a href="${PAPER(x.paper)}" target="_blank" rel="noopener">AMS page</a>`:"";const abs=x.abstract?`<details class="abs"><summary>Full abstract</summary><p>${e(x.abstract)}</p></details>`:"";const k=noteKey(x);return `<div class="more">${link}${abs}<details class="abs note" data-note="${k}"><summary>${label(k)}</summary><div class="notepanel"></div></details></div>`};
 const talks=t=>t&&t.length?`<ul class="talks">${t.map(x=>`<li><time>${x.time}</time><div><strong>${e(x.title)}${x.badge?`<span class="star">${e(x.badge)}</span>`:""}</strong><p>${e(x.by)}. ${e(x.blurb)}</p>${more(x)}</div></li>`).join("")}</ul>`:"";
 const alt=a=>{const n=(a.talks||[]).length;return `<details><summary>${e(a.title)}<small>Room ${e(a.room)}${n?` · ${n} talk${n===1?"":"s"}`:""}</small></summary><p class="why">${e(a.why)} <a href="${S(a.id)}" target="_blank" rel="noopener">View session on the AMS site</a></p>${talks(a.talks)}</details>`};
 const pgroups=g=>g.map(x=>`<div class="ph">${e(x.name)}</div><div class="posters">${x.items.map(p=>`<div class="poster"><h4>${e(p.title)}</h4><small>${e(p.by)}</small><p>${e(p.blurb)}</p>${more(p)}</div>`).join("")}</div>`).join("");
@@ -153,6 +170,7 @@ const show=(k,target)=>{
  document.getElementById("dayoutlook").textContent=d.outlook;
  document.getElementById("outlook").innerHTML=d.blocks.filter(b=>!b.evening).map(b=>`<a class="tile" href="#${d.key}/${b.id}">${svg(b.icon)}<b>${b.time}</b><span>${e(b.short)}</span><small>${e(b.posters?b.posters.room:b.pick.room)}</small></a>`).join("");
  document.getElementById("day").innerHTML=d.blocks.map(section).join("");
+ if(store)refreshLabels();
  const el=target&&document.getElementById(target);
  if(el) el.scrollIntoView(); else window.scrollTo(0,0);
 };
@@ -165,7 +183,133 @@ const route=()=>{
 document.getElementById("eyebrow").textContent=DATA.eyebrow;
 document.getElementById("title").textContent=DATA.title;
 document.getElementById("foot").textContent=DATA.footer;
-addEventListener("hashchange",route);
+/* Notes: one record per talk or poster. Published on claude.ai they live in the artifact's database and
+   asset store; as a plain file, or for anyone who can't edit the artifact, they stay in this browser. */
+const NOTES=new Map(),dirty=new Set(),writing=new Set(),timers=new Map();
+let store=null,notesState="loading";
+const MAX_IMAGE=20*1024*1024;
+const noteKey=x=>{if(x.paper)return "p"+x.paper;let h=0;for(const c of x.title)h=(h*31+c.charCodeAt(0))|0;return "t"+(h>>>0).toString(36)};
+const noteOf=k=>NOTES.get(k)||{text:"",images:[]};
+const label=k=>{const n=noteOf(k),i=(n.images||[]).length,bits=[];if((n.text||"").trim())bits.push("saved");if(i)bits.push(`${i} image${i===1?"":"s"}`);return bits.length?`Notes (${bits.join(", ")})`:"Notes"};
+const refreshLabels=()=>document.querySelectorAll("details.note").forEach(d=>{const s=d.querySelector("summary");s.textContent=label(d.dataset.note);s.classList.toggle("has",s.textContent!=="Notes")});
+const panelFor=k=>document.querySelector(`details.note[data-note="${k}"][open] .notepanel`);
+const status=(k,msg,bad)=>{const s=panelFor(k)?.querySelector(".notestatus");if(s){s.textContent=msg;s.classList.toggle("bad",!!bad)}};
+const gallery=k=>{const g=panelFor(k)?.querySelector(".notegallery");if(!g)return;g.innerHTML=(noteOf(k).images||[]).map(i=>{const src=store.src(i);return `<figure><a href="${e(src)}" target="_blank" rel="noopener"><img src="${e(src)}" alt="${e(i.name||"Screenshot")}"></a><button type="button" class="noteremove" data-image="${e(i.id)}">Remove</button></figure>`}).join("")};
+const fillPanel=d=>{
+ const k=d.dataset.note,p=d.querySelector(".notepanel");
+ if(!store){p.innerHTML=`<p class="notestatus${notesState==="off"?" bad":""}">${notesState==="off"?"Notes can't be saved in this browser view. Try opening the page in a regular browser window.":notesState==="stuck"?"Your saved notes can't be reached yet. Check your connection and reload.":"Loading your notes…"}</p>`;return}
+ if(!p.querySelector("textarea")){
+  p.innerHTML=`<textarea rows="4" aria-label="Your notes" placeholder="Type notes, or paste or drop a screenshot here"></textarea><div class="notetools"><label class="noteadd">Add screenshot<input type="file" accept="image/png,image/jpeg,image/gif,image/webp" multiple></label><span class="notestatus" role="status"></span></div><div class="notegallery"></div>`;
+  p.querySelector("textarea").value=noteOf(k).text||"";
+ }
+ gallery(k);
+};
+const flush=async k=>{
+ clearTimeout(timers.get(k));
+ if(!store||!dirty.has(k)||writing.has(k))return;
+ writing.add(k);dirty.delete(k);status(k,"Saving…");
+ try{const n=noteOf(k);n.updated=Date.now();await store.save(k,n);if(!dirty.has(k))status(k,"Saved");refreshLabels()}
+ catch(err){dirty.add(k);status(k,"Couldn't save. Your text is still here, so keep the page open and try again.",true)}
+ writing.delete(k);
+ if(dirty.has(k)&&!panelFor(k)?.querySelector(".notestatus.bad"))flush(k);
+};
+const setNote=(k,patch)=>{NOTES.set(k,{...noteOf(k),...patch});dirty.add(k)};
+const addImages=async(k,files)=>{
+ const list=[...files].filter(f=>f.type.startsWith("image/"));
+ if(!list.length)return status(k,"Only images can be added here.",true);
+ for(const f of list){
+  if(f.size>MAX_IMAGE){status(k,`${f.name||"That image"} is over the 20 MB limit.`,true);continue}
+  status(k,"Adding screenshot…");
+  try{const img=await store.addImage(f);setNote(k,{images:[...(noteOf(k).images||[]),img]});gallery(k);await flush(k)}
+  catch(err){status(k,err&&err.code==="unsupported_type"?"Use a PNG, JPEG, GIF or WebP image.":"Couldn't add that screenshot. Try again.",true)}
+ }
+};
+const removeImage=async(k,id)=>{
+ const n=noteOf(k),img=(n.images||[]).find(i=>i.id===id);
+ setNote(k,{images:(n.images||[]).filter(i=>i.id!==id)});gallery(k);await flush(k);
+ if(!dirty.has(k)&&img){try{await store.removeImage(img)}catch(err){}}
+};
+addEventListener("toggle",ev=>{const d=ev.target;if(d.matches&&d.matches("details.note")){if(d.open)fillPanel(d);else flush(d.dataset.note)}},true);
+addEventListener("input",ev=>{if(!ev.target.matches("details.note textarea"))return;const k=ev.target.closest("details.note").dataset.note;setNote(k,{text:ev.target.value});clearTimeout(timers.get(k));timers.set(k,setTimeout(()=>flush(k),800));status(k,"Typing…")});
+addEventListener("focusout",ev=>{if(ev.target.matches&&ev.target.matches("details.note textarea"))flush(ev.target.closest("details.note").dataset.note)});
+addEventListener("change",ev=>{if(!ev.target.matches("details.note input[type=file]"))return;addImages(ev.target.closest("details.note").dataset.note,ev.target.files).then(()=>{ev.target.value=""})});
+addEventListener("paste",ev=>{const p=ev.target.closest&&ev.target.closest(".notepanel");if(!p||!store)return;const f=[...(ev.clipboardData?.files||[])].filter(x=>x.type.startsWith("image/"));if(f.length){ev.preventDefault();addImages(p.closest("details.note").dataset.note,f)}});
+addEventListener("dragover",ev=>{const p=ev.target.closest&&ev.target.closest(".notepanel");if(p&&store){ev.preventDefault();p.classList.add("drag")}});
+addEventListener("dragleave",ev=>{ev.target.closest&&ev.target.closest(".notepanel")?.classList.remove("drag")});
+addEventListener("drop",ev=>{const p=ev.target.closest&&ev.target.closest(".notepanel");if(!p||!store)return;ev.preventDefault();p.classList.remove("drag");addImages(p.closest("details.note").dataset.note,ev.dataTransfer.files)});
+addEventListener("click",ev=>{const b=ev.target.closest&&ev.target.closest(".noteremove");if(!b)return;if(b.dataset.armed)return removeImage(b.closest("details.note").dataset.note,b.dataset.image);b.dataset.armed="1";b.textContent="Confirm remove"});
+addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")[...dirty].forEach(flush)});
+const notesReady=()=>{refreshLabels();document.querySelectorAll("details.note[open]").forEach(fillPanel)};
+const cloudStore=async()=>{
+ const [db,assets,user]=await Promise.all(["db","assets","user"].map(n=>claude.use(n)));
+ if(!db||!assets||!user||!await user.canEdit())return false;
+ const notes=db.collection("notes");
+ store={src:i=>"/_blob/"+i.id,save:(k,n)=>notes.doc(k).set({text:n.text||"",images:(n.images||[]).map(i=>({id:i.id,name:i.name||""})),updated:n.updated}),
+  addImage:async f=>({id:(await assets.upload(f,f.type?undefined:{type:"image/png"})).id,name:f.name||""}),removeImage:i=>assets.delete(i.id)};
+ const held=store;store=null;
+ const late=setTimeout(()=>{if(!store){notesState="stuck";notesReady()}},10000);
+ notes.onSnapshot(snap=>{
+  clearTimeout(late);
+  snap.docChanges().forEach(c=>{
+   const k=c.doc.id;if(dirty.has(k)||writing.has(k))return;
+   if(c.type==="removed")NOTES.delete(k);else NOTES.set(k,{...c.doc.data()});
+   const box=panelFor(k)?.querySelector("textarea");
+   if(box&&document.activeElement!==box)box.value=noteOf(k).text||"";
+   if(store)gallery(k);
+  });
+  if(!store){store=held;notesState="ready";notesReady()}else refreshLabels();
+ },()=>{clearTimeout(late);if(!store){notesState="stuck";notesReady()}});
+ return true;
+};
+const req=r=>new Promise((ok,no)=>{r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+const localStore=async()=>{
+ const open=indexedDB.open("ams-schedule-notes",1);
+ open.onupgradeneeded=()=>open.result.createObjectStore("notes");
+ const idb=await Promise.race([req(open),new Promise((_,no)=>setTimeout(()=>no(new Error("storage timed out")),5000))]),tx=m=>idb.transaction("notes",m).objectStore("notes");
+ const urls=new Map();
+ const keys=await req(tx("readonly").getAllKeys()),vals=await req(tx("readonly").getAll());
+ keys.forEach((k,i)=>NOTES.set(k,vals[i]));
+ store={src:i=>{if(!urls.has(i.id))urls.set(i.id,URL.createObjectURL(i.blob));return urls.get(i.id)},save:(k,n)=>req(tx("readwrite").put(n,k)),
+  addImage:async f=>({id:Date.now().toString(36)+Math.random().toString(36).slice(2),name:f.name||"",blob:f.slice(0,f.size,f.type||"image/png")}),removeImage:async()=>{}};
+ notesState="ready";
+ const bar=document.getElementById("notesbar");
+ bar.hidden=false;
+ bar.innerHTML=`Notes save in this browser on this device. <button type="button" id="notesbackup">Back up notes</button> <label class="noteadd">Restore a backup<input type="file" id="notesrestore" accept="application/json,.json"></label> <span id="notesmsg" role="status"></span>`;
+};
+const toData=b=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>no(r.error);r.readAsDataURL(b)});
+const fromData=d=>{const [h,body]=d.split(","),bin=atob(body),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:h.slice(5).split(";")[0]})};
+addEventListener("click",async ev=>{
+ if(!ev.target.matches||!ev.target.matches("#notesbackup"))return;
+ await Promise.all([...dirty].map(flush));
+ const out={version:1,notes:{}};
+ for(const [k,n] of NOTES)out.notes[k]={text:n.text||"",updated:n.updated||0,images:await Promise.all((n.images||[]).map(async i=>({id:i.id,name:i.name||"",data:await toData(i.blob)})))};
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:"application/json"}));a.download="ams-schedule-notes.json";document.body.append(a);a.click();a.remove();
+});
+addEventListener("change",async ev=>{
+ if(ev.target.id!=="notesrestore"||!ev.target.files[0])return;
+ const msg=document.getElementById("notesmsg");
+ try{
+  const data=JSON.parse(await ev.target.files[0].text());let n=0;
+  for(const [k,v] of Object.entries(data.notes)){
+   const cur=noteOf(k);
+   if((cur.updated||0)>(v.updated||0))continue;
+   NOTES.set(k,{text:v.text,updated:v.updated,images:v.images.map(i=>({id:i.id,name:i.name,blob:fromData(i.data)}))});
+   await store.save(k,NOTES.get(k));n++;
+  }
+  msg.textContent=`Restored ${n} note${n===1?"":"s"}. Notes that were newer on this device were kept.`;
+  document.querySelectorAll("details.note").forEach(d=>{const t=d.querySelector("textarea");if(t)t.value=noteOf(d.dataset.note).text||""});notesReady();
+ }catch(err){msg.textContent="That file couldn't be read as a notes backup."}
+ ev.target.value="";
+});
+addEventListener("hashchange",()=>{[...dirty].forEach(flush);route()});
 route();
+(async()=>{
+ for(let i=0;i<10&&!window.claude;i++)await new Promise(r=>setTimeout(r,100));
+ try{
+  if(window.claude&&await cloudStore())return;
+  await localStore();
+ }catch(err){store=null;notesState="off"}
+ notesReady();
+})();
 </script>
 </html>

@@ -118,7 +118,7 @@ for d in doc["days"]:
                     errors.append(f"{d['key']} {item['title'][:50]}: paper {pid} is not in the program")
                 elif sid and int(p["sid"].split("/")[1]) != sid:
                     errors.append(f"{d['key']} {item['title'][:50]}: paper {pid} belongs to another session")
-                elif p["by"] and item["by"].split(",")[0].strip().lower() not in p["by"].lower():
+                elif p["by"] and item["by"].split(",")[0].strip().lower() not in (p["by"] + " " + p["title"]).lower():
                     errors.append(f"{d['key']} {item['title'][:50]}: speaker {item['by']!r} is not on paper {pid}: {p['by'][:80]}")
                 else:
                     item["abstract"] = p["abs"]
