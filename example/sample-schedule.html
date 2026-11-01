@@ -274,7 +274,7 @@ const localStore=async()=>{
  notesState="ready";
  const bar=document.getElementById("notesbar");
  bar.hidden=false;
- bar.innerHTML=`Notes save in this browser on this device. <button type="button" id="notesbackup">Back up notes</button> <label class="noteadd">Restore a backup<input type="file" id="notesrestore" accept="application/json,.json"></label> <span id="notesmsg" role="status"></span>`;
+ bar.innerHTML=window.claude?"Notes save in this browser on this device.":`Notes save in this browser on this device. <button type="button" id="notesbackup">Back up notes</button> <label class="noteadd">Restore a backup<input type="file" id="notesrestore" accept="application/json,.json"></label> <span id="notesmsg" role="status"></span>`;
 };
 const toData=b=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>no(r.error);r.readAsDataURL(b)});
 const fromData=d=>{const [h,body]=d.split(","),bin=atob(body),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:h.slice(5).split(";")[0]})};
