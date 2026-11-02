@@ -2,7 +2,7 @@
 
 Have an AI agent build your personal schedule for the [AMS Annual Meeting](https://annual.ametsoc.org/) (Denver, January 10–14, 2027). It asks what you're interested in, reads the program, and makes a cute weather-themed page with day tabs, a top pick for each time slot, alternates, a summary and expandable full abstract for every talk, links to each session on the AMS site, relevant posters, and a place under each talk for your own notes and screenshots.
 
-![A sample schedule page with day tabs, weather icons and a top-pick session](docs/preview.png)
+![A sample schedule page with day tabs, weather icons, a top-pick session and an open note with a screenshot](docs/preview.png)
 
 The picture and `example/` use invented sessions. Your page will use the real program.
 
